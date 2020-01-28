@@ -16,5 +16,8 @@ public interface UserService {
 	public AccessTokenResponse generateAccessToken(AccessTokenRequest accessTokenRequest);
 	
 	public User createUser(UserRequest user);
+	
+	
+	public Optional<User> getUserByAccessToken(String access_token);
 		
 }

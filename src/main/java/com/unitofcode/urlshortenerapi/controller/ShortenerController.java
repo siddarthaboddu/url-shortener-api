@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unitofcode.urlshortenerapi.dto.RetreiveRequest;
 import com.unitofcode.urlshortenerapi.dto.ShortenRequest;
 import com.unitofcode.urlshortenerapi.model.Url;
+import com.unitofcode.urlshortenerapi.model.User;
 import com.unitofcode.urlshortenerapi.service.ShortenerService;
 import com.unitofcode.urlshortenerapi.service.UrlService;
+import com.unitofcode.urlshortenerapi.service.UserService;
 
 @RestController
 @RequestMapping("/api")
@@ -30,11 +32,15 @@ public class ShortenerController {
 	
 	@Autowired
 	private UrlService urlService;
+	
+	@Autowired
+	private UserService userService;
 
 	@PostMapping("/shorten")
 	public ResponseEntity<String> shortenLink(@RequestHeader(value = "access-token", required = false) String access_token,
 			@RequestBody ShortenRequest request, HttpServletRequest httpServletRequest) {
-		if(shortenerService.isLimitReached(access_token, request, httpServletRequest)) {
+		Optional<User> user = userService.getUserByAccessToken(access_token);
+		if(shortenerService.isLimitReached(access_token, request, httpServletRequest, user)) {
 			return new ResponseEntity<String>("maximum request limit reached, to get more request wait for 1 day or upgrade to premium account", HttpStatus.BANDWIDTH_LIMIT_EXCEEDED);
 		}
 		String shortenedUrl = shortenerService.shorten(request);

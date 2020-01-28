@@ -84,8 +84,7 @@ public class ShortenerService {
 
 	
 	public boolean isLimitReached(String accessToken, ShortenRequest shortenRequest,
-			HttpServletRequest httpServletRequest) {
-		Optional<User> optionalUser = userRepository.findFirstByAccessToken(accessToken);
+			HttpServletRequest httpServletRequest, Optional<User> optionalUser) {
 		ClientUsage clientUsage = null;
 		String synchronizedObject = "";
 		if(optionalUser.isPresent()) {

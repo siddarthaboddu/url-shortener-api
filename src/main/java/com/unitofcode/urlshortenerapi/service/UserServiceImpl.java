@@ -79,6 +79,12 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
+	@Override
+	public Optional<User> getUserByAccessToken(String access_token) {
+		Optional<User> user = userRepository.findFirstByAccessToken(access_token);
+		return user;
+	}
+
 
 	
 	
