@@ -6,4 +6,6 @@ import lombok.Data;
 public class AccessTokenResponse {
 
 	private String accessToken;
+	private String tokenType;
+	private Integer expiresIn;
 }

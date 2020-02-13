@@ -8,14 +8,10 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
@@ -34,17 +30,13 @@ public class ThrottlingFilter implements Filter{ //currently disabled this appro
 	@Bean
 	private Bucket createNewBucket() {
 		long overdraft = 100;
-		Refill refill = Refill.greedy(100,  Duration.ofSeconds(1));
+		Refill refill = Refill.greedy(300,  Duration.ofSeconds(1));
 		Bandwidth limit = Bandwidth.classic(overdraft,  refill);
 		return Bucket4j.builder().addLimit(limit).build();
 	}
 	
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        HttpSession session = httpRequest.getSession(true);
-        log.info("second    ");
-        String appKey = "url-shortener";
         
         log.info("bucket tokens : {}",bucket.getAvailableTokens());
         // tryConsume returns false immediately if no tokens available with the bucket

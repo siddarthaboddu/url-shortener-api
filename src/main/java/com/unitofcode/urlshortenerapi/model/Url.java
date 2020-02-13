@@ -25,10 +25,10 @@ public class Url {
 	private String shortUrl;
 	private String longUrl;
 	private Long visits=0l;
+	private String passwordHash;
 	
-	
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "user_id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private User user;

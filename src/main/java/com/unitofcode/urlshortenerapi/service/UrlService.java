@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.unitofcode.urlshortenerapi.constants.Constants;
 import com.unitofcode.urlshortenerapi.model.Url;
 import com.unitofcode.urlshortenerapi.model.User;
 import com.unitofcode.urlshortenerapi.repository.UrlRepository;
@@ -22,8 +23,8 @@ public class UrlService {
 	@Autowired
 	UserRepository userRepository;
 	
-	public Optional<List<Url>> getAllUrlsForUser(String access_token, HttpServletRequest httpServletRequest) {
-		Optional<User> currentUser = userRepository.findFirstByAccessToken(access_token);
+	public Optional<List<Url>> getAllUrlsForUser(HttpServletRequest httpServletRequest) {
+		Optional<User> currentUser = userRepository.findFirstByEmail(httpServletRequest.getAttribute(Constants.EMAIL_ADDRESS).toString());
 		if(currentUser.isPresent()) {
 			List<Url> urls = urlRepository.findAllByUserId(currentUser.get().getId());
 			if(urls.size() > 0)
@@ -31,7 +32,7 @@ public class UrlService {
 			else
 				return Optional.empty();
 		}
-		return null;
+		return Optional.empty();
 	}
 
 }

@@ -5,13 +5,13 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.unitofcode.urlshortenerapi.dto.RetreiveRequest;
 import com.unitofcode.urlshortenerapi.dto.ShortenRequest;
+import com.unitofcode.urlshortenerapi.dto.UrlResponse;
 import com.unitofcode.urlshortenerapi.model.ClientUsage;
 import com.unitofcode.urlshortenerapi.model.Url;
 import com.unitofcode.urlshortenerapi.model.User;
@@ -43,7 +43,7 @@ public class ShortenerService {
 
 	private int shortUrlLength = 8;
 
-	public String shorten(ShortenRequest request) {
+	public UrlResponse shorten(ShortenRequest request, Optional<User> user, ClientUsage clientUsage) {
 
 		String longUrl = request.getUrl();
 
@@ -55,9 +55,15 @@ public class ShortenerService {
 		Url url = new Url();
 		url.setShortUrl(randomString);
 		url.setLongUrl(longUrl);
+		if(user.isPresent())
+			url.setUser(user.get());
 		urlRepository.save(url);
 
-		return hostname + randomString;
+		String shortUrl = hostname + randomString;
+		UrlResponse urlResponse = new UrlResponse();
+		urlResponse.setUrl(shortUrl);
+		urlResponse.setUsageLeft(clientUsage.getUsageLeft());
+		return urlResponse;
 	}
 
 	private String generateRandomString() {
@@ -83,8 +89,8 @@ public class ShortenerService {
 	}
 
 	
-	public boolean isLimitReached(String accessToken, ShortenRequest shortenRequest,
-			HttpServletRequest httpServletRequest, Optional<User> optionalUser) {
+	public ClientUsage usageLeft(ShortenRequest shortenRequest,
+			HttpServletRequest httpServletRequest, Optional<User> optionalUser, String Tier) {
 		ClientUsage clientUsage = null;
 		String synchronizedObject = "";
 		if(optionalUser.isPresent()) {
@@ -93,35 +99,43 @@ public class ShortenerService {
 		else {
 			synchronizedObject=""+httpServletRequest.getRemoteAddr();
 		}
-		log.info("synchronized object : {}",synchronizedObject.intern());
 		synchronized(synchronizedObject.intern()) {
-			if (optionalUser.isPresent() && StringUtils.isNotBlank(accessToken)) {
+			if (optionalUser.isPresent()) {
 				User user = optionalUser.get();
 				clientUsage = clientUsageRepository.findFirstByUserId(user.getId());
 				if (clientUsage == null) {
 					clientUsage = new ClientUsage();
 					clientUsage.setUserId(user.getId());
-					clientUsage.setUsageLeft(200000l);
+					
+					if(Tier.equalsIgnoreCase("FREE"))
+						clientUsage.setUsageLeft(20l);
+					if(Tier.equalsIgnoreCase("USER"))
+						clientUsage.setUsageLeft(200l);
+					
 				}
 			} else {
 				String ipAddress = httpServletRequest.getRemoteAddr();
-//			log.info(ipAddress);
+
 				clientUsage = clientUsageRepository.findFirstByIpAddress(ipAddress);
-//			log.info("value from redis db : {}",clientUsage);
+
 				if (clientUsage == null) {
 					clientUsage = new ClientUsage();
 					clientUsage.setIpAddress(ipAddress);
-					clientUsage.setUsageLeft(200000l);
+					
+					if(Tier.equalsIgnoreCase("FREE"))
+						clientUsage.setUsageLeft(20l);
+					if(Tier.equalsIgnoreCase("USER"))
+						clientUsage.setUsageLeft(200l);
+					
 				}
 			}
 
+
+			
 			clientUsage.setUsageLeft(clientUsage.getUsageLeft() - 1);
 			clientUsage = clientUsageRepository.save(clientUsage);
 			log.info("clientUsage left : {}", clientUsage.getUsageLeft());
-			if(clientUsage.getUsageLeft() < 0) {
-				return true;
-			}
-			return false;
+			return clientUsage;
 		}
 		
 	}

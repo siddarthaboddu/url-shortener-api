@@ -13,6 +13,10 @@ import lombok.Data;
 @RedisHash(value="ClientUsage",timeToLive = 600)
 public class ClientUsage implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4793287000852752623L;
 	@Id
 	private String id;
 	@Indexed

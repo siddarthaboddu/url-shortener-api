@@ -46,13 +46,12 @@
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.netflix.concurrency-limits/concurrency-limits-core -->
+		
 		<dependency>
 			<groupId>com.netflix.concurrency-limits</groupId>
 			<artifactId>concurrency-limits-core</artifactId>
 			<version>0.3.6</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.netflix.concurrency-limits/concurrency-limits-servlet -->
 		<dependency>
 			<groupId>com.netflix.concurrency-limits</groupId>
 			<artifactId>concurrency-limits-servlet</artifactId>
@@ -86,8 +85,17 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-redis</artifactId>
 		</dependency>
-
-
+		<!-- JSON WEB TOKEN -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20190722</version>
+		</dependency>
 
 		<dependency>
 			<groupId>redis.clients</groupId>
