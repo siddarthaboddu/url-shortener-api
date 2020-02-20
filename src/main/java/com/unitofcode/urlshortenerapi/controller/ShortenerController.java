@@ -63,7 +63,7 @@ public class ShortenerController {
 	public ResponseEntity<List<Url>> getAllUrls(HttpServletRequest httpServletRequest){
 		Optional<List<Url>> urls = urlService.getAllUrlsForUser(httpServletRequest);
 		if(urls.isPresent())
-			return new ResponseEntity<List<Url>>(urls.get(), HttpStatus.ACCEPTED);
+			return new ResponseEntity<List<Url>>(urls.get(), HttpStatus.OK);
 		else
 			return new ResponseEntity<List<Url>>(HttpStatus.NO_CONTENT);
 	}

@@ -64,9 +64,10 @@ public class UserServiceImpl implements UserService {
 					.signWith(SignatureAlgorithm.HS512, Constants.SECRET_KEY.getBytes()).compact();
 			
 			accessTokenResponse.setAccessToken(token);
-			accessTokenResponse.setTokenType(Constants.PREFIX.trim());
+			accessTokenResponse.setTokenType(Constants.BEARER_PREFIX.trim());
 			accessTokenResponse.setExpiresIn(600);
 		}
+		
 		return accessTokenResponse;
 	}
 	

@@ -1,5 +1,6 @@
 package com.unitofcode.urlshortenerapi.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +23,15 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
-	@PostMapping("/token/generateAccessToken")
+	@PostMapping("/token/login")
 	public ResponseEntity<AccessTokenResponse> generateAccessToken(@RequestBody AccessTokenRequest accessTokenRequest){
 		AccessTokenResponse accessTokenResponse = userService.generateAccessToken(accessTokenRequest);
+		if(StringUtils.isEmpty(accessTokenResponse.getAccessToken()))
+			return new ResponseEntity<>(accessTokenResponse,HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<>(accessTokenResponse,HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/token/createUser")
+	@PostMapping("/token/register")
 	public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest){
 		
 		try {
