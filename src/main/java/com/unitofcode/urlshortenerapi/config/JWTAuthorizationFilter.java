@@ -49,7 +49,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 				}
 			}
 			
-
+			log.info("before dofilter");
 			filterChain.doFilter(request, response);
 		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
