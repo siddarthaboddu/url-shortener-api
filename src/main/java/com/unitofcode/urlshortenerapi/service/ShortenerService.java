@@ -61,7 +61,8 @@ public class ShortenerService {
 
 		String shortUrl = hostname + randomString;
 		UrlResponse urlResponse = new UrlResponse();
-		urlResponse.setUrl(shortUrl);
+		urlResponse.setShortUrl(shortUrl);
+		urlResponse.setOriginalUrl(longUrl);
 		urlResponse.setUsageLeft(clientUsage.getUsageLeft());
 		return urlResponse;
 	}

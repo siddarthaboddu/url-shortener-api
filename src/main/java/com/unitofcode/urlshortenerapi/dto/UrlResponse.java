@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 @JsonInclude(Include.NON_NULL)
 public class UrlResponse {
-	private String url;
+	private String originalUrl;
+	private String shortUrl;
 	private Long usageLeft;
 }

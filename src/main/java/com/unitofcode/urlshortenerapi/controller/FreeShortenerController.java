@@ -44,7 +44,8 @@ public class FreeShortenerController {
 	public ResponseEntity<UrlResponse> getOriginalLink(@RequestBody RetreiveRequest request) {
 		String originalUrl = shortenerService.getOriginal(request);
 		UrlResponse urlResponse = new UrlResponse();
-		urlResponse.setUrl(originalUrl);
+		urlResponse.setOriginalUrl(originalUrl);
+		urlResponse.setShortUrl(request.getUrl());
 		return new ResponseEntity<UrlResponse>(urlResponse, HttpStatus.OK);
 	}
 	
