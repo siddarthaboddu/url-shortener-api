@@ -35,7 +35,10 @@ public class ShortenerService {
 	UserRepository userRepository;
 
 	@Value("${url.shortener.hostname}")
-	String hostname;
+	String hostName;
+	
+	@Value("${url.shortener.client.prefix}")
+	String clientPrefix;
 
 	private Random random = new Random();
 
@@ -59,7 +62,7 @@ public class ShortenerService {
 			url.setUser(user.get());
 		urlRepository.save(url);
 
-		String shortUrl = hostname + randomString;
+		String shortUrl = clientPrefix + randomString;
 		UrlResponse urlResponse = new UrlResponse();
 		urlResponse.setShortUrl(shortUrl);
 		urlResponse.setOriginalUrl(longUrl);
