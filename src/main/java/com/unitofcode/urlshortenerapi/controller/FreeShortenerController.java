@@ -27,27 +27,31 @@ public class FreeShortenerController {
 	private ShortenerService shortenerService;
 
 	@PostMapping("/shorten")
-	public ResponseEntity<UrlResponse> shortenLink(@RequestBody ShortenRequest request, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<UrlResponse> shortenLink(@RequestBody ShortenRequest request,
+			HttpServletRequest httpServletRequest) {
 		Optional<User> user = Optional.empty();
-		
+
 		ClientUsage clientUsage = shortenerService.usageLeft(request, httpServletRequest, user, "FREE");
-		
-		if(clientUsage.getUsageLeft() < 0) {
+
+		if (clientUsage.getUsageLeft() < 0) {
 			return new ResponseEntity<UrlResponse>(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED);
 		}
-		
+
 		UrlResponse shortenedUrl = shortenerService.shorten(request, user, clientUsage);
 		return new ResponseEntity<UrlResponse>(shortenedUrl, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/retreive")
 	public ResponseEntity<UrlResponse> getOriginalLink(@RequestBody RetreiveRequest request) {
-		String originalUrl = shortenerService.getOriginal(request);
-		UrlResponse urlResponse = new UrlResponse();
-		urlResponse.setOriginalUrl(originalUrl);
-		urlResponse.setShortUrl(request.getUrl());
-		return new ResponseEntity<UrlResponse>(urlResponse, HttpStatus.OK);
+		try {
+			String originalUrl = shortenerService.getOriginal(request);
+			UrlResponse urlResponse = new UrlResponse();
+			urlResponse.setOriginalUrl(originalUrl);
+			urlResponse.setShortUrl(request.getUrl());
+			return new ResponseEntity<UrlResponse>(urlResponse, HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
 	}
-	
 
 }

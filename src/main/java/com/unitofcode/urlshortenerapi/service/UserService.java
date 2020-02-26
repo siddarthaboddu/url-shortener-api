@@ -11,7 +11,7 @@ import com.unitofcode.urlshortenerapi.model.User;
 
 public interface UserService {
 
-	public boolean isValidLogin(String email, String password);
+	public boolean isValidLogin(String email, String password, AccessTokenResponse accessTokenResponse);
 		
 	public AccessTokenResponse generateAccessToken(AccessTokenRequest accessTokenRequest);
 	

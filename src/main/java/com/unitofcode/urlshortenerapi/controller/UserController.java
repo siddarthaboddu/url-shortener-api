@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unitofcode.urlshortenerapi.dto.AccessTokenRequest;
 import com.unitofcode.urlshortenerapi.dto.AccessTokenResponse;
-import com.unitofcode.urlshortenerapi.dto.Status;
+import com.unitofcode.urlshortenerapi.dto.RegisterResponse;
 import com.unitofcode.urlshortenerapi.dto.UserRequest;
 import com.unitofcode.urlshortenerapi.model.User;
 import com.unitofcode.urlshortenerapi.service.UserService;
@@ -33,16 +33,21 @@ public class UserController {
 	}
 	
 	@PostMapping("/token/register")
-	public ResponseEntity<Status> createUser(@RequestBody UserRequest userRequest){
+	public ResponseEntity<RegisterResponse> createUser(@RequestBody UserRequest userRequest){
 		
 		try {
 			log.info("userRequest : {}",userRequest);
 			User user = userService.createUser(userRequest);
 			if(user == null) throw new RuntimeException("");
-			return new ResponseEntity<>(new Status(true), HttpStatus.CREATED);
+			RegisterResponse registerResponse = new RegisterResponse();
+			registerResponse.setStatus("true");
+			registerResponse.setUser(user);
+			return new ResponseEntity<>(registerResponse, HttpStatus.CREATED);
 		}
 		catch(Exception e) {
-			return new ResponseEntity<>(new Status(false), HttpStatus.INTERNAL_SERVER_ERROR);
+			RegisterResponse registerResponse = new RegisterResponse();
+			registerResponse.setStatus("false");
+			return new ResponseEntity<>(registerResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

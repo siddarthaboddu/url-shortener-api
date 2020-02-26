@@ -37,10 +37,11 @@ public class UserServiceImpl implements UserService {
 	BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
-	public boolean isValidLogin(String email, String rawPassword) {
+	public boolean isValidLogin(String email, String rawPassword, AccessTokenResponse accessTokenResponse) {
 		Optional<User> optionalUser = userRepository.findFirstByEmail(email);
 		
 		if (optionalUser.isPresent() && bCryptPasswordEncoder.matches(rawPassword, optionalUser.get().getPasswordHash())) {
+			accessTokenResponse.setUser(optionalUser.get());
 			return true;
 		}
 		return false;
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public AccessTokenResponse generateAccessToken(AccessTokenRequest accessTokenRequest) {
 		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
-		if(isValidLogin(accessTokenRequest.getEmail(), accessTokenRequest.getPassword())) {
+		if(isValidLogin(accessTokenRequest.getEmail(), accessTokenRequest.getPassword(), accessTokenResponse)) {
 			List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
 			
 			String token = Jwts.builder()

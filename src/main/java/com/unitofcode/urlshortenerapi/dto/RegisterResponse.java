@@ -5,10 +5,8 @@ import com.unitofcode.urlshortenerapi.model.User;
 import lombok.Data;
 
 @Data
-public class AccessTokenResponse {
+public class RegisterResponse {
 
-	private String accessToken;
-	private String tokenType;
-	private Integer expiresIn;
+	private String status;
 	private User user;
 }

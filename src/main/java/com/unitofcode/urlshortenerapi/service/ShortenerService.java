@@ -89,6 +89,7 @@ public class ShortenerService {
 
 	public String getOriginal(RetreiveRequest request) {
 		Url url = urlRepository.findFirstByShortUrl(request.getUrl());
+		if(url == null) throw new RuntimeException("Not Found");
 		return url.getLongUrl();
 	}
 
