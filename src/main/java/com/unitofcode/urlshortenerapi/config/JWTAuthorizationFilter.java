@@ -47,7 +47,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 				}
 			}
 			
-			log.info("before dofilter");
+//			log.info("before dofilter");
 			filterChain.doFilter(request, response);
 		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -80,11 +80,11 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	}
 	
 	private void logRequest(HttpServletRequest request) {
-		log.info("request_log: {}",request);
+//		log.info("request_log: {}",request);
 	}
 	
 	private void logResponse(HttpServletResponse response) {
-		log.info("response_log: {}",response);
+//		log.info("response_log: {}",response);
 	}
 
 }
