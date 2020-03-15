@@ -113,9 +113,9 @@ public class ShortenerService {
 					clientUsage.setUserId(user.getId());
 					
 					if(Tier.equalsIgnoreCase("FREE"))
-						clientUsage.setUsageLeft(20l);
-					if(Tier.equalsIgnoreCase("USER"))
 						clientUsage.setUsageLeft(200l);
+					if(Tier.equalsIgnoreCase("USER"))
+						clientUsage.setUsageLeft(2000l);
 					
 				}
 			} else {
@@ -128,9 +128,9 @@ public class ShortenerService {
 					clientUsage.setIpAddress(ipAddress);
 					
 					if(Tier.equalsIgnoreCase("FREE"))
-						clientUsage.setUsageLeft(20l);
-					if(Tier.equalsIgnoreCase("USER"))
 						clientUsage.setUsageLeft(200l);
+					if(Tier.equalsIgnoreCase("USER"))
+						clientUsage.setUsageLeft(2000l);
 					
 				}
 			}

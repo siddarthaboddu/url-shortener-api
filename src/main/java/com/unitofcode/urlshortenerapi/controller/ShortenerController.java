@@ -38,7 +38,7 @@ public class ShortenerController {
 	private UserService userService;
 
 	@PostMapping("/shorten")
-	public ResponseEntity<UrlResponse> shortenLink(@RequestBody ShortenRequest request, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<UrlResponse> shortenLink(@RequestBody ShortenRequest request, HttpServletRequest httpServletRequest) throws InterruptedException {
 		Optional<User> user = Optional.of(userService.getCurrentUser(httpServletRequest));
 		
 		ClientUsage clientUsage = shortenerService.usageLeft(request, httpServletRequest, user, "FREE");
