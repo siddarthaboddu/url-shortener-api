@@ -35,4 +35,15 @@ public class UrlService {
 		return Optional.empty();
 	}
 
+	public Optional<Url> getUrlDetails(Long urlId, HttpServletRequest httpServletRequest){
+		Optional<User> currentUser = userRepository.findFirstByEmail(httpServletRequest.getAttribute(Constants.EMAIL_ADDRESS).toString());
+		if(currentUser.isPresent()) {
+			Optional<Url> url = urlRepository.findById(urlId);
+			if(url.isPresent())
+				return url;
+			else
+				return Optional.empty();
+		}
+		return Optional.empty();
+	}
 }
