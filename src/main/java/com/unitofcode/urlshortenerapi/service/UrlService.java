@@ -23,6 +23,9 @@ public class UrlService {
 	@Autowired
 	UserRepository userRepository;
 	
+	@Autowired
+	AsyncService asyncService;
+	
 	public Optional<List<Url>> getAllUrlsForUser(HttpServletRequest httpServletRequest) {
 		Optional<User> currentUser = userRepository.findFirstByEmail(httpServletRequest.getAttribute(Constants.EMAIL_ADDRESS).toString());
 		if(currentUser.isPresent()) {
@@ -46,4 +49,18 @@ public class UrlService {
 		}
 		return Optional.empty();
 	}
+
+	public Url getLongUrl(HttpServletRequest httpServletRequest, String shortUrl) {
+		Url url = urlRepository.findFirstByShortUrl(shortUrl);
+		if(url == null) {
+			return null;
+		}
+		
+		asyncService.incrementUrlVisits(url);
+
+		Url responseUrl = new Url();
+		responseUrl.setLongUrl(url.getLongUrl());
+		return responseUrl;
+	}
+	
 }

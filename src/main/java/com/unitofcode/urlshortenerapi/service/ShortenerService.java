@@ -6,7 +6,6 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.unitofcode.urlshortenerapi.dto.RetreiveRequest;
@@ -34,12 +33,6 @@ public class ShortenerService {
 	@Autowired
 	UserRepository userRepository;
 
-	@Value("${url.shortener.hostname}")
-	String hostName;
-	
-	@Value("${url.shortener.client.prefix}")
-	String clientPrefix;
-
 	private Random random = new Random();
 
 	private String characters = "abdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -62,7 +55,7 @@ public class ShortenerService {
 			url.setUser(user.get());
 		urlRepository.save(url);
 
-		String shortUrl = clientPrefix + randomString;
+		String shortUrl = randomString;
 		UrlResponse urlResponse = new UrlResponse();
 		urlResponse.setShortUrl(shortUrl);
 		urlResponse.setOriginalUrl(longUrl);

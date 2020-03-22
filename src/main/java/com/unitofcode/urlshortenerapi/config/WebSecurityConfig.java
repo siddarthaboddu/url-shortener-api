@@ -24,6 +24,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers(HttpMethod.POST, "/token/**").permitAll()
 			.antMatchers(HttpMethod.POST, "/free/**").permitAll()
+			.antMatchers(HttpMethod.GET, "/free/**").permitAll()
 			.anyRequest().authenticated();
 	}
 	

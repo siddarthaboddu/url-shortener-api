@@ -1,5 +1,7 @@
 package com.unitofcode.urlshortenerapi.config;
 
+import java.util.concurrent.Executor;
+
 import javax.servlet.Filter;
 
 import org.springframework.context.annotation.Bean;
@@ -8,6 +10,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.netflix.concurrency.limits.servlet.ConcurrencyLimitServletFilter;
@@ -15,7 +20,8 @@ import com.netflix.concurrency.limits.servlet.ServletLimiterBuilder;
 
 @Configuration
 @EnableRedisRepositories
-public class UrlShortenerConfig {
+@EnableAsync
+public class UrlShortenerConfig implements AsyncConfigurer {
 
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -50,5 +56,16 @@ public class UrlShortenerConfig {
 		return filter;
 
 	}
+	
+    @Override
+    public Executor getAsyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(25);
+        executor.setQueueCapacity(Integer.MAX_VALUE);
+        executor.setThreadNamePrefix("MyExecutor-");
+        executor.initialize();
+        return executor;
+    }
 
 }

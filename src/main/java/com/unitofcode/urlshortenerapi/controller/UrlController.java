@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unitofcode.urlshortenerapi.model.Url;
 import com.unitofcode.urlshortenerapi.service.UrlService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class UrlController {
 
 	@Autowired
@@ -40,4 +43,5 @@ public class UrlController {
 		}
 		return  new ResponseEntity<Url>(HttpStatus.NO_CONTENT);
 	}
+	
 }
