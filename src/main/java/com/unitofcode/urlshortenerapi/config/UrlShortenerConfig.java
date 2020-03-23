@@ -44,8 +44,8 @@ public class UrlShortenerConfig implements AsyncConfigurer {
 		return jedisConFactory;
 	}
 
-	@Bean
-	@Order(1)
+//	@Bean
+//	@Order(1)
 	public Filter filter() {
 		Filter filter = new ConcurrencyLimitServletFilter(
 				new ServletLimiterBuilder().

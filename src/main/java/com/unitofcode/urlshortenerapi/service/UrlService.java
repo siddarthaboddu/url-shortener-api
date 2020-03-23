@@ -56,10 +56,12 @@ public class UrlService {
 			return null;
 		}
 		
-		asyncService.incrementUrlVisits(url);
+		asyncService.incrementUrlVisits(httpServletRequest, url);
 
 		Url responseUrl = new Url();
 		responseUrl.setLongUrl(url.getLongUrl());
+		responseUrl.setShortUrl(url.getShortUrl());
+		responseUrl.setVisits(url.getVisits());
 		return responseUrl;
 	}
 	

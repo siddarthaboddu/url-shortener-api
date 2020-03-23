@@ -6,6 +6,7 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.unitofcode.urlshortenerapi.dto.RetreiveRequest;
@@ -29,6 +30,12 @@ public class ShortenerService {
 
 	@Autowired
 	ClientUsageRepository clientUsageRepository;
+	
+	@Value("${url.shortener.free.user.limit}")
+	private Long freeUserLimitPerDay;
+	
+	@Value("${url.shortener.registered.user.limit}")
+	private Long registeredUserLimitPerDay;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -106,9 +113,9 @@ public class ShortenerService {
 					clientUsage.setUserId(user.getId());
 					
 					if(Tier.equalsIgnoreCase("FREE"))
-						clientUsage.setUsageLeft(200l);
+						clientUsage.setUsageLeft(freeUserLimitPerDay);
 					if(Tier.equalsIgnoreCase("USER"))
-						clientUsage.setUsageLeft(2000l);
+						clientUsage.setUsageLeft(registeredUserLimitPerDay);
 					
 				}
 			} else {
@@ -121,9 +128,9 @@ public class ShortenerService {
 					clientUsage.setIpAddress(ipAddress);
 					
 					if(Tier.equalsIgnoreCase("FREE"))
-						clientUsage.setUsageLeft(200l);
+						clientUsage.setUsageLeft(freeUserLimitPerDay);
 					if(Tier.equalsIgnoreCase("USER"))
-						clientUsage.setUsageLeft(2000l);
+						clientUsage.setUsageLeft(registeredUserLimitPerDay);
 					
 				}
 			}
