@@ -1,8 +1,9 @@
 package com.unitofcode.urlshortenerapi.service;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZoneOffset;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,7 +15,10 @@ import com.unitofcode.urlshortenerapi.model.Visit;
 import com.unitofcode.urlshortenerapi.repository.UrlRepository;
 import com.unitofcode.urlshortenerapi.repository.VisitRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class AsyncService {
 	
 	@Autowired
@@ -37,8 +41,13 @@ public class AsyncService {
 		Visit visit = new Visit();
 		
 		visit.setUrlId(url.getId());
-		visit.setCreateTime(Timestamp.from(Instant.now().atOffset(ZoneOffset.UTC).toInstant()));
+		
+		ZonedDateTime gmt = ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("GMT"));
+		
+		visit.setCreateTime(Timestamp.valueOf(gmt.toLocalDateTime()));
+				
 		visit.setReferer(httpServletRequest.getHeader("REFERER-UI"));
+		visit.setUserId(url.getUser().getId());
 		
 		visitRepository.save(visit);
 	}

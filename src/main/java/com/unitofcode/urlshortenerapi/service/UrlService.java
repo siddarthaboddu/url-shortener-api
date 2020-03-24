@@ -30,7 +30,7 @@ public class UrlService {
 		Optional<User> currentUser = userRepository.findFirstByEmail(httpServletRequest.getAttribute(Constants.EMAIL_ADDRESS).toString());
 		if(currentUser.isPresent()) {
 			List<Url> urls = urlRepository.findAllByUserId(currentUser.get().getId());
-			if(urls.size() > 0)
+			if(urls.size() >= 0)
 				return Optional.of(urls);
 			else
 				return Optional.empty();
