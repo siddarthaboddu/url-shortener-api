@@ -24,5 +24,11 @@ public interface VisitRepository extends CrudRepository<Visit, Long>{
 	
 	@Query("select new com.unitofcode.urlshortenerapi.dto.VisitDTO(v.userId, count(v), DATE(v.createTime)) from Visit v where ( (YEAR(v.createTime) = YEAR(CURRENT_DATE) and MONTH(v.createTime) <= MONTH(CURRENT_DATE) ) or (YEAR(v.createTime) = YEAR(CURRENT_DATE)-1 and MONTH(v.createTime) > MONTH(CURRENT_DATE) ) )  and v.userId = :userId group by EXTRACT(MONTH from v.createTime)")
 	public List<VisitDTO> getOneYearPerMonthHistory(@Param("userId") Long userId);
+
+	@Query("select new com.unitofcode.urlshortenerapi.dto.VisitDTO(v.userId, count(v), DATE(v.createTime)) from Visit v where (v.createTime) > :oldDate and v.userId = :userId and v.urlId = :urlId group by DATE(v.createTime)")
+	public List<VisitDTO> getLast30DaysHistoryForUrlId(@Param("userId") Long userId, @Param("urlId") Long urlId, Date oldDate);
+
+	@Query("select new com.unitofcode.urlshortenerapi.dto.VisitDTO(v.userId, count(v), DATE(v.createTime)) from Visit v where ( (YEAR(v.createTime) = YEAR(CURRENT_DATE) and MONTH(v.createTime) <= MONTH(CURRENT_DATE) ) or (YEAR(v.createTime) = YEAR(CURRENT_DATE)-1 and MONTH(v.createTime) > MONTH(CURRENT_DATE) ) )  and v.userId = :userId and v.urlId = :urlId group by EXTRACT(MONTH from v.createTime)")
+	public List<VisitDTO> getOneYearPerMonthHistoryForUrl(@Param("userId") Long userId, @Param("urlId") Long urlId);
 	
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unitofcode.urlshortenerapi.dto.VisitResponse;
@@ -71,4 +72,28 @@ public class UrlController {
 		
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+	
+	@GetMapping("/url/history/last30Days")
+	public ResponseEntity<List<VisitResponse>> getLastOneMonthVisitForUrl(HttpServletRequest httpServletRequest, @RequestParam("urlId") Long urlId){
+		Optional<List<VisitResponse>> visits = visitService.getLast30DaysHistory(httpServletRequest, urlId);
+		
+		if(visits.isPresent()) {
+			return new ResponseEntity<>(visits.get(), HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping("/url/history/last1Year")
+	public ResponseEntity<List<VisitResponse>> getlastOneYearResponseForUrl(HttpServletRequest httpServletRequest, @RequestParam("urlId") Long urlId){
+		Optional<List<VisitResponse>> visits = visitService.getlastOneYearResponse(httpServletRequest, urlId);
+		
+		if(visits.isPresent()) {
+			return new ResponseEntity<>(visits.get(), HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	
 }

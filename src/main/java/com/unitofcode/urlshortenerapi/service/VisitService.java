@@ -58,6 +58,26 @@ public class VisitService {
 		return Optional.of(visitResponseList);
 	}
 
+	public Optional<List<VisitResponse>> getLast30DaysHistory(HttpServletRequest httpServletRequest, Long urlId) {
+		User user = userService.getCurrentUser(httpServletRequest);
+
+		LocalDate oldLocalDate = LocalDate.now(ZoneOffset.UTC).minusMonths(1).plusDays(1);
+		Date oldDate = Date.from(oldLocalDate.atStartOfDay(ZoneId.of("GMT")).toInstant());
+		
+		List<VisitDTO> visitCountList = visitRepository.getLast30DaysHistoryForUrlId(user.getId(), urlId, oldDate);
+		log.info("{}",visitCountList);
+		
+		List<VisitResponse> visitResponseList = new ArrayList<VisitResponse>(40);
+		
+		LocalDate currentDate = LocalDate.now(ZoneOffset.UTC);
+		LocalDate oneMonthOldDate = LocalDate.now(ZoneOffset.UTC).minusMonths(1).plusDays(1);
+
+		mergeOneMonth(visitResponseList, oneMonthOldDate, currentDate, visitCountList);
+				
+		return Optional.of(visitResponseList);
+	}
+	
+	
 	private void mergeOneMonth(List<VisitResponse> visitResponseList, LocalDate oldDate, LocalDate currentDate,
 			List<VisitDTO> visitCountList) {
 		DateTimeFormatter formatterDMY = DateTimeFormatter.ofPattern("dd LLL yy");
@@ -123,6 +143,36 @@ public class VisitService {
 		return Optional.of(visitResponseList);
 	}
 	
+	public Optional<List<VisitResponse>> getlastOneYearResponse(HttpServletRequest httpServletRequest, Long urlId) {
+		User user = userService.getCurrentUser(httpServletRequest);
+		List<VisitDTO> visitCountList = visitRepository.getOneYearPerMonthHistoryForUrl(user.getId(), urlId);
+		log.info("{}",visitCountList);
+
+		Collections.sort(visitCountList, new Comparator<VisitDTO>(){
+
+			@Override
+			public int compare(VisitDTO o1, VisitDTO o2) {
+				return o1.getDate().compareTo(o2.getDate());
+			}
+			
+		});
+		
+		log.info("{}",visitCountList);
+
+		List<VisitResponse> visitResponseList = new ArrayList<VisitResponse>(15);
+		
+
+		
+		
+		LocalDate currentDate = LocalDate.now(ZoneOffset.UTC);
+		LocalDate oneYearOldDate = LocalDate.now(ZoneOffset.UTC).minusYears(1).plusMonths(1);
+		log.info("old date starting point: {}", oneYearOldDate);
+		log.info("current stating point: {}", currentDate);
+		mergeOneYear(visitResponseList, oneYearOldDate, currentDate, visitCountList);
+				
+		return Optional.of(visitResponseList);
+	}
+	
 	private void mergeOneYear(List<VisitResponse> visitResponseList, LocalDate oldDate, LocalDate currentDate,
 			List<VisitDTO> visitCountList) {
 		DateTimeFormatter formatterMY = DateTimeFormatter.ofPattern("LLL yy");
@@ -151,6 +201,9 @@ public class VisitService {
 		}
 		return false;
 	}
-	
+
+
+
+
 
 }
