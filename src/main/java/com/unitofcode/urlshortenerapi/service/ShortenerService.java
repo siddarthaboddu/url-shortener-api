@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.unitofcode.urlshortenerapi.dto.RetreiveRequest;
@@ -39,6 +40,9 @@ public class ShortenerService {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	private Random random = new Random();
 
@@ -58,6 +62,12 @@ public class ShortenerService {
 		Url url = new Url();
 		url.setShortUrl(randomString);
 		url.setLongUrl(longUrl);
+		
+		if(request.isPasswordEnabled()) {
+			String rawPassword = request.getPassword();
+			url.setPasswordHash(bCryptPasswordEncoder.encode(rawPassword));
+		}
+		
 		if(user.isPresent())
 			url.setUser(user.get());
 		urlRepository.save(url);
