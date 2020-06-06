@@ -17,7 +17,6 @@ import com.unitofcode.urlshortenerapi.model.User;
 import com.unitofcode.urlshortenerapi.repository.UrlRepository;
 import com.unitofcode.urlshortenerapi.repository.UserRepository;
 
-import jdk.internal.jline.internal.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
