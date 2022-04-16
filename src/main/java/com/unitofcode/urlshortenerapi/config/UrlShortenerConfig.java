@@ -6,6 +6,7 @@ import javax.servlet.Filter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
@@ -45,16 +46,16 @@ public class UrlShortenerConfig implements AsyncConfigurer {
 
 //	@Bean
 //	@Order(1)
-	public Filter filter() {
-		Filter filter = new ConcurrencyLimitServletFilter(
-				new ServletLimiterBuilder().
-				partition("shorten", 0.3).
-				partition("retreive", 0.6).
-				partition("user", 0.1).
-				build());
-		return filter;
-
-	}
+//	public Filter filter() {
+//		Filter filter = new ConcurrencyLimitServletFilter(
+//				new ServletLimiterBuilder().
+//				partition("shorten", 0.3).
+//				partition("retreive", 0.6).
+//				partition("user", 0.1).
+//				build());
+//		return filter;
+//
+//	}
 	
     @Override
     public Executor getAsyncExecutor() {
