@@ -36,7 +36,7 @@ public class FreeUrlController {
 		if(url == null) {
 			return new ResponseEntity<Url>(HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity<Url>(url, HttpStatus.OK);
+		return new ResponseEntity<Url>(url, HttpStatus.ACCEPTED);
 	}
 	
 	
